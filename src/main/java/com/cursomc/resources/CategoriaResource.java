@@ -19,7 +19,7 @@ public class CategoriaResource {
 	private CategoriaService service;
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
-	public ResponseEntity<?> find(@PathVariable Integer id) {
+	public ResponseEntity<?> find(@PathVariable Integer id) throws Throwable {
 		Categoria obj = service.buscar(id);
 		return ResponseEntity.ok(obj);
 	}
