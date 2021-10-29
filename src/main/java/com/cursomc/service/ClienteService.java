@@ -12,8 +12,11 @@ import java.util.Optional;
 @Service
 public class ClienteService {
 
-    @Autowired
-    private ClienteRepository repository;
+    private final ClienteRepository repository;
+
+    public ClienteService(ClienteRepository repository) {
+        this.repository = repository;
+    }
 
 
     public Cliente buscar(Integer id)  {

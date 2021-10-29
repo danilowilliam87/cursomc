@@ -13,9 +13,12 @@ import com.cursomc.service.exception.ObjectNotFoundException;
 @Service
 public class CategoriaService {
 
-	@Autowired
-	private CategoriaRepository repository;
-	
+	private final CategoriaRepository repository;
+
+	public CategoriaService(CategoriaRepository repository) {
+		this.repository = repository;
+	}
+
 	public Categoria buscar(Integer id)  {
 		Optional<Categoria> cat = repository.findById(id);
 		return cat.orElseThrow(() -> new ObjectNotFoundException(

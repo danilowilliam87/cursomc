@@ -1,6 +1,7 @@
 package com.cursomc;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -24,24 +25,27 @@ import com.cursomc.repositories.ProdutoRepository;
 @SpringBootApplication
 public class CursomcApplication implements CommandLineRunner{
 
-	@Autowired
-	private CategoriaRepository repository;
+	private final CategoriaRepository repository;
 	
-	@Autowired
-	private ProdutoRepository produtoRepository;
+	private final ProdutoRepository produtoRepository;
 	
-	@Autowired
-	private CidadeRepository cidadeRepository;
+	private final CidadeRepository cidadeRepository;
 	
-	@Autowired
-	private EstadoRepository estadoRepository;
+	private final EstadoRepository estadoRepository;
 	
-	@Autowired
-	private ClienteRepository clienteRepository;
+	private final ClienteRepository clienteRepository;
 	
-	@Autowired
-	private EnderecoRepository enderecoRepository;
-	
+	private final EnderecoRepository enderecoRepository;
+
+	public CursomcApplication(CategoriaRepository repository, ProdutoRepository produtoRepository, CidadeRepository cidadeRepository, EstadoRepository estadoRepository, ClienteRepository clienteRepository, EnderecoRepository enderecoRepository) {
+		this.repository = repository;
+		this.produtoRepository = produtoRepository;
+		this.cidadeRepository = cidadeRepository;
+		this.estadoRepository = estadoRepository;
+		this.clienteRepository = clienteRepository;
+		this.enderecoRepository = enderecoRepository;
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
 	}
@@ -76,11 +80,11 @@ public class CursomcApplication implements CommandLineRunner{
 		
 		
 		cat1.getProdutos().addAll(Arrays.asList(p1, p2, p3));
-		cat2.getProdutos().addAll(Arrays.asList(p2));
+		cat2.getProdutos().addAll(List.of(p2));
 		
-		p1.getCategorias().addAll(Arrays.asList(cat1));
+		p1.getCategorias().addAll(List.of(cat1));
 		p2.getCategorias().addAll(Arrays.asList(cat1, cat2));
-		p3.getCategorias().addAll(Arrays.asList(cat1));
+		p3.getCategorias().addAll(List.of(cat1));
 		
 		
 		repository.saveAll(Arrays.asList(cat1, cat2));
@@ -94,7 +98,7 @@ public class CursomcApplication implements CommandLineRunner{
 		Endereco endereco2 = new Endereco(null, "Avenida Matos", "105", "sala 800", "Centro", "38777012", maria, capitalSp);
 		maria.getEnderecos().addAll(Arrays.asList(endereco1, endereco2));
 		
-		clienteRepository.saveAll(Arrays.asList(maria));
+		clienteRepository.saveAll(List.of(maria));
 		enderecoRepository.saveAll(Arrays.asList(endereco1, endereco2));
 		
 	}
