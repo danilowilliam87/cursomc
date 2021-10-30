@@ -2,12 +2,9 @@ package com.cursomc;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.List;
-
 import com.cursomc.domain.*;
 import com.cursomc.domain.enums.EstadoPagamento;
 import com.cursomc.repositories.*;
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -2,7 +2,6 @@ package com.cursomc.resource;
 
 import com.cursomc.domain.Pedido;
 import com.cursomc.service.PedidoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
