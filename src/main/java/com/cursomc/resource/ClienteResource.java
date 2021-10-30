@@ -1,29 +1,32 @@
-package com.cursomc.resources;
+package com.cursomc.resource;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.cursomc.domain.Cliente;
+import com.cursomc.service.ClienteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cursomc.domain.Categoria;
-import com.cursomc.service.CategoriaService;
-
 @RestController
-@RequestMapping(value = "/categoria")
-public class CategoriaResource {
+@RequestMapping(value = "/clientes")
+public class ClienteResource {
 
-	private final CategoriaService service;
+	private final ClienteService service;
 
-	public CategoriaResource(CategoriaService service) {
+	public ClienteResource(ClienteService service) {
 		this.service = service;
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
 	public ResponseEntity<?> find(@PathVariable Integer id) throws Throwable {
-		Categoria obj = service.buscar(id);
+		Cliente obj = service.buscar(id);
 		return ResponseEntity.ok(obj);
+	}
+
+	@RequestMapping("/ola")
+	public String teste(){
+		return "ola mundo";
 	}
 }

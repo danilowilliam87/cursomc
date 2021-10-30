@@ -1,31 +1,23 @@
 package com.cursomc;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.cursomc.domain.*;
+import com.cursomc.domain.enums.EstadoPagamento;
+import com.cursomc.repositories.*;
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.cursomc.domain.Categoria;
-import com.cursomc.domain.Cidade;
-import com.cursomc.domain.Cliente;
-import com.cursomc.domain.Endereco;
-import com.cursomc.domain.Estado;
-import com.cursomc.domain.Produto;
 import com.cursomc.domain.enums.TipoCliente;
-import com.cursomc.repositories.CategoriaRepository;
-import com.cursomc.repositories.CidadeRepository;
-import com.cursomc.repositories.ClienteRepository;
-import com.cursomc.repositories.EnderecoRepository;
-import com.cursomc.repositories.EstadoRepository;
-import com.cursomc.repositories.ProdutoRepository;
 
 @SpringBootApplication
 public class CursomcApplication implements CommandLineRunner{
 
-	private final CategoriaRepository repository;
+	private final CategoriaRepository categoriaRepository;
 	
 	private final ProdutoRepository produtoRepository;
 	
@@ -37,13 +29,26 @@ public class CursomcApplication implements CommandLineRunner{
 	
 	private final EnderecoRepository enderecoRepository;
 
-	public CursomcApplication(CategoriaRepository repository, ProdutoRepository produtoRepository, CidadeRepository cidadeRepository, EstadoRepository estadoRepository, ClienteRepository clienteRepository, EnderecoRepository enderecoRepository) {
-		this.repository = repository;
+	private final PedidoRepository pedidoRepository;
+
+	private final PagamentoRepository pagamentoRepository;
+
+	private final ItemPedidoRepository itemPedidoRepository;
+
+	public CursomcApplication(CategoriaRepository categoriaRepository, ProdutoRepository produtoRepository,
+							  CidadeRepository cidadeRepository, EstadoRepository estadoRepository,
+							  ClienteRepository clienteRepository, EnderecoRepository enderecoRepository,
+							  PedidoRepository pedidoRepository,PagamentoRepository pagamentoRepository,
+							  ItemPedidoRepository itemPedidoRepository) {
+		this.categoriaRepository = categoriaRepository;
 		this.produtoRepository = produtoRepository;
 		this.cidadeRepository = cidadeRepository;
 		this.estadoRepository = estadoRepository;
 		this.clienteRepository = clienteRepository;
 		this.enderecoRepository = enderecoRepository;
+		this.pedidoRepository = pedidoRepository;
+		this.pagamentoRepository = pagamentoRepository;
+		this.itemPedidoRepository = itemPedidoRepository;
 	}
 
 	public static void main(String[] args) {
@@ -55,51 +60,74 @@ public class CursomcApplication implements CommandLineRunner{
 		// TODO Auto-generated method stub
 		Categoria cat1 = new Categoria(null, "Informática");
 		Categoria cat2 = new Categoria(null, "Escritório");
-		
-		Produto p1 = new Produto(null,"Computador", 2000.00);
-		Produto p2 = new Produto(null,"Impressora", 800.00);
-		Produto p3 = new Produto(null,"Mouse", 30.00);
-		
-		Estado minas = new Estado(null, "Minas Gerais");
-		Estado saoPaulo = new Estado(null, "São Paulo");
-		
-		Cidade capitalSp  = new Cidade(null, "São Paulo Capital");
-		Cidade campinas = new Cidade(null, "Campinas");
-		
-		Cidade uberlandia = new Cidade(null, "Uberlândia");
-		Cidade beloHorizonte = new Cidade(null, "Belo Horizonte");
-		
-		uberlandia.setEstado(minas);
-		beloHorizonte.setEstado(minas);
-		
-		campinas.setEstado(saoPaulo);
-		capitalSp.setEstado(saoPaulo);
-		
-		minas.getCidades().addAll(Arrays.asList(uberlandia, beloHorizonte));
-		saoPaulo.getCidades().addAll(Arrays.asList(capitalSp, campinas));
-		
-		
-		cat1.getProdutos().addAll(Arrays.asList(p1, p2, p3));
-		cat2.getProdutos().addAll(List.of(p2));
-		
-		p1.getCategorias().addAll(List.of(cat1));
-		p2.getCategorias().addAll(Arrays.asList(cat1, cat2));
-		p3.getCategorias().addAll(List.of(cat1));
-		
-		
-		repository.saveAll(Arrays.asList(cat1, cat2));
-        produtoRepository.saveAll(Arrays.asList(p1, p2, p3));
-		estadoRepository.saveAll(Arrays.asList(saoPaulo, minas));
-		cidadeRepository.saveAll(Arrays.asList(capitalSp, beloHorizonte, uberlandia, campinas));
 
-		Cliente maria = new Cliente(null, "Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOAFISICA);
-		maria.getTelefones().addAll(Arrays.asList("9898989", "5465465"));
-		Endereco endereco1 = new Endereco(null, "Rua das Flores", "300", "s/n", "jardim", "38220834", maria, uberlandia);
-		Endereco endereco2 = new Endereco(null, "Avenida Matos", "105", "sala 800", "Centro", "38777012", maria, capitalSp);
-		maria.getEnderecos().addAll(Arrays.asList(endereco1, endereco2));
-		
-		clienteRepository.saveAll(List.of(maria));
-		enderecoRepository.saveAll(Arrays.asList(endereco1, endereco2));
+		Produto p1 = new Produto(null, "Computador", 2000.00);
+		Produto p2 = new Produto(null, "Impressora", 800.00);
+		Produto p3 = new Produto(null, "Mouse", 80.00);
+
+		cat1.getProdutos().addAll(Arrays.asList(p1, p2, p3));
+		cat2.getProdutos().addAll(Arrays.asList(p2));
+
+		p1.getCategorias().addAll(Arrays.asList(cat1));
+		p2.getCategorias().addAll(Arrays.asList(cat1, cat2));
+		p3.getCategorias().addAll(Arrays.asList(cat1));
+
+		categoriaRepository.saveAll(Arrays.asList(cat1, cat2));
+		produtoRepository.saveAll(Arrays.asList(p1, p2, p3));
+
+		Estado est1 = new Estado(null, "Minas Gerais");
+		Estado est2 = new Estado(null, "São Paulo");
+
+		Cidade c1 = new Cidade(null, "Uberlândia", est1);
+		Cidade c2 = new Cidade(null, "São Paulo", est2);
+		Cidade c3 = new Cidade(null, "Campinas", est2);
+
+		est1.getCidades().addAll(Arrays.asList(c1));
+		est2.getCidades().addAll(Arrays.asList(c2, c3));
+
+		estadoRepository.saveAll(Arrays.asList(est1, est2));
+		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
+
+		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOAFISICA);
+
+		cli1.getTelefones().addAll(Arrays.asList("27363323", "93838393"));
+
+		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardim", "38220834", cli1, c1);
+		Endereco e2 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777012", cli1, c2);
+
+		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+
+		clienteRepository.saveAll(Arrays.asList(cli1));
+		enderecoRepository.saveAll(Arrays.asList(e1, e2));
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
+		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:35"), cli1, e2);
+
+		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pagto1);
+
+		Pagamento pagto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"), null);
+		ped2.setPagamento(pagto2);
+
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+
+		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
+
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 		
 	}
 	

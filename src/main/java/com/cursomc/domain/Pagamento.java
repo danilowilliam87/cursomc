@@ -1,5 +1,6 @@
 package com.cursomc.domain;
 
+import com.cursomc.domain.enums.EstadoPagamento;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -25,9 +26,9 @@ public abstract class Pagamento implements Serializable {
     public Pagamento() {
     }
 
-    public Pagamento(Integer id, Integer estado, Pedido pedido) {
+    public Pagamento(Integer id, EstadoPagamento estado, Pedido pedido) {
         this.id = id;
-        this.estado = estado;
+        this.estado = estado.getCod();
         this.pedido = pedido;
     }
 
@@ -39,12 +40,12 @@ public abstract class Pagamento implements Serializable {
         this.id = id;
     }
 
-    public Integer getEstado() {
-        return estado;
+    public EstadoPagamento getEstado() {
+        return EstadoPagamento.toEnum(estado);
     }
 
-    public void setEstado(Integer estado) {
-        this.estado = estado;
+    public void setEstado(EstadoPagamento estado) {
+        this.estado = estado.getCod();
     }
 
     public Pedido getPedido() {
