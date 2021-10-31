@@ -3,9 +3,11 @@ package com.cursomc.service;
 import com.cursomc.domain.Categoria;
 import com.cursomc.repositories.CategoriaRepository;
 import com.cursomc.service.exception.DataIntegrityException;
+import com.cursomc.service.exception.MethodArgumentException;
 import com.cursomc.service.exception.ObjectNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 
 import java.util.Optional;
@@ -21,10 +23,9 @@ public class CategoriaService {
 	}
 
 	public Categoria find(Integer id)  {
-		Optional<Categoria> cat = repository.findById(id);
-		return cat.orElseThrow(() -> new ObjectNotFoundException(
-				"Objeto não encontrado! Id : " + id + ", Tipo : " + Categoria.class.getName()));
-		
+			Optional<Categoria> cat = repository.findById(id);
+			return cat.orElseThrow(() -> new ObjectNotFoundException(
+					"Objeto não encontrado! Id : " + id + ", Tipo : " + Categoria.class.getName()));
 	}
 
 	public Categoria insert(Categoria obj){
@@ -42,9 +43,12 @@ public class CategoriaService {
 		try{
 			repository.deleteById(id);
 		}catch (DataIntegrityViolationException e){
-			throw  new DataIntegrityException("Não é possível excluir uma categoria que possui produto");
+			throw new DataIntegrityException("Não é possível excluir uma categoria que possui produto");
 		}
+	}
+
+
 	}
 	
 	
-}
+

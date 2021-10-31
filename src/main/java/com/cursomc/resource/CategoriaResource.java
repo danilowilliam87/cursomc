@@ -47,4 +47,9 @@ public class CategoriaResource {
           service.delete(id);
 		  return ResponseEntity.noContent().build();
 	}
+
+	@RequestMapping(value = "/teste/{id}", method = RequestMethod.GET)
+	public String teste(@PathVariable Integer id){
+		return service.teste(id);
+	}
 }
