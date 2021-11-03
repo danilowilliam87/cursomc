@@ -1,13 +1,17 @@
 package com.cursomc.resource;
 
 
+import com.cursomc.dtos.CategoriaDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.cursomc.domain.Categoria;
 import com.cursomc.service.CategoriaService;
+import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/categoria")
@@ -48,8 +52,13 @@ public class CategoriaResource {
 		  return ResponseEntity.noContent().build();
 	}
 
-	@RequestMapping(value = "/teste/{id}", method = RequestMethod.GET)
-	public String teste(@PathVariable Integer id){
-		return service.teste(id);
+	@RequestMapping(method = RequestMethod.GET)
+	public ResponseEntity<List<CategoriaDto>> findAll(){
+		List<Categoria>list = service.findAll();
+		List<CategoriaDto> listDto = list.stream()
+				.map(obj -> new CategoriaDto(obj))
+				.collect(Collectors.toList());
+		return ResponseEntity.ok().body(listDto);
 	}
+
 }

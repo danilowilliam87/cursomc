@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -45,6 +46,9 @@ public class CategoriaService {
 		}catch (DataIntegrityViolationException e){
 			throw new DataIntegrityException("Não é possível excluir uma categoria que possui produto");
 		}
+	}
+	public List<Categoria> findAll(){
+		return repository.findAll();
 	}
 
 
