@@ -6,6 +6,9 @@ import com.cursomc.service.exception.DataIntegrityException;
 import com.cursomc.service.exception.MethodArgumentException;
 import com.cursomc.service.exception.ObjectNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
@@ -51,7 +54,13 @@ public class CategoriaService {
 		return repository.findAll();
 	}
 
-
+	public Page<Categoria> findPage(Integer page,
+									Integer linePerPage,
+									String orderBy,
+									String direction){
+		PageRequest pageRequest = PageRequest.of(page, linePerPage, Sort.Direction.valueOf(direction), orderBy);
+			return repository.findAll(pageRequest);
+		}
 	}
 	
 	

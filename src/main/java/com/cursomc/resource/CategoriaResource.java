@@ -2,6 +2,7 @@ package com.cursomc.resource;
 
 
 import com.cursomc.dtos.CategoriaDto;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.cursomc.domain.Categoria;
@@ -61,4 +62,15 @@ public class CategoriaResource {
 		return ResponseEntity.ok().body(listDto);
 	}
 
+	@RequestMapping(value = "/page", method = RequestMethod.GET)
+	public ResponseEntity<Page<CategoriaDto>> findPage(
+		@RequestParam(value = "page", defaultValue = "0") Integer page,
+		@RequestParam(value = "linesPerPage", defaultValue = "0") Integer linesPerPage,
+		@RequestParam(value = "orderBy", defaultValue = "nome") String orderBy,
+		@RequestParam(value = "direction", defaultValue = "ASC") String direction
+	){
+         Page<Categoria> list = service.findPage(page, linesPerPage, orderBy, direction);
+		 Page<CategoriaDto> listDto = list.map(obj -> new CategoriaDto(obj));
+		 return ResponseEntity.ok().body(listDto);
+	}
 }
