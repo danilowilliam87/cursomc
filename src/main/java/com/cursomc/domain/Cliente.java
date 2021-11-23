@@ -1,15 +1,14 @@
 package com.cursomc.domain;
 
+import com.cursomc.domain.enums.TipoCliente;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.persistence.*;
-
-import com.cursomc.domain.enums.TipoCliente;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -30,7 +29,7 @@ public class Cliente implements Serializable {
 	@JsonIgnore
     private String senha;
 
-	@OneToMany(mappedBy = "cliente")
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
 	private List<Endereco>enderecos = new ArrayList<Endereco>();
 	
 	@ElementCollection

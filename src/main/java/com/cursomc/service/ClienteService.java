@@ -1,7 +1,12 @@
 package com.cursomc.service;
 
+import com.cursomc.domain.Cidade;
 import com.cursomc.domain.Cliente;
+import com.cursomc.domain.Endereco;
+import com.cursomc.domain.enums.TipoCliente;
 import com.cursomc.dtos.ClienteDTO;
+import com.cursomc.dtos.ClienteNewDTO;
+import com.cursomc.repositories.CidadeRepository;
 import com.cursomc.repositories.ClienteRepository;
 import com.cursomc.repositories.EnderecoRepository;
 import com.cursomc.service.exception.DataIntegrityException;
@@ -21,10 +26,12 @@ public class ClienteService {
 
     private final ClienteRepository repository;
     private final EnderecoRepository endRepository;
+    private final CidadeRepository cidadeRepository;
 
-    public ClienteService(ClienteRepository repository, EnderecoRepository endRepository) {
+    public ClienteService(ClienteRepository repository, EnderecoRepository endRepository, CidadeRepository cidadeRepository) {
         this.repository = repository;
         this.endRepository = endRepository;
+        this.cidadeRepository = cidadeRepository;
     }
 
 
@@ -41,6 +48,29 @@ public class ClienteService {
 
     public Cliente fromDTO(ClienteDTO clienteDTO){
        return new Cliente(clienteDTO.getId(), clienteDTO.getNome(), clienteDTO.getEmail(), null, null);
+    }
+
+    public Cliente fromDTO(ClienteNewDTO clienteNewDTO){
+        Cliente cli = new Cliente(null, clienteNewDTO.getNome(),
+                clienteNewDTO.getEmail(), clienteNewDTO.getCpfOuCnpj(),
+                TipoCliente.toEnum(clienteNewDTO.getTipo()),
+                clienteNewDTO.getSenha());
+        Cidade cid = new Cidade( clienteNewDTO.getCidadeId(), null, null);
+        Endereco end = new Endereco(null, clienteNewDTO.getLogradouro(), clienteNewDTO.getNumero(),
+                clienteNewDTO.getComplemento(),clienteNewDTO.getBairro(), clienteNewDTO.getCep(),
+        cli, cid);
+        cli.getTelefones().add(clienteNewDTO.getTelefone1());
+        if(clienteNewDTO.getTelefone2() != null){
+            cli.getTelefones().add(clienteNewDTO.getTelefone2());
+        }
+        if(clienteNewDTO.getTelefone2() != null){
+            cli.getTelefones().add(clienteNewDTO.getTelefone2());
+        }
+        if(clienteNewDTO.getTelefone3() != null){
+            cli.getTelefones().add(clienteNewDTO.getTelefone2());
+        }
+
+       return cli;
     }
 
     @Transactional
