@@ -3,6 +3,7 @@ package com.cursomc.resource;
 
 import com.cursomc.domain.Cliente;
 import com.cursomc.dtos.ClienteDTO;
+import com.cursomc.dtos.ClienteNewDTO;
 import com.cursomc.service.ClienteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +37,8 @@ public class ClienteResource {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteDTO clienteDTO){
-		Cliente cliente = service.fromDTO(clienteDTO);
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO clienteNewDTO){
+		Cliente cliente = service.fromDTO(clienteNewDTO);
         cliente = service.insert(cliente);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequestUri()
