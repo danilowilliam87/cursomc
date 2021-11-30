@@ -6,6 +6,7 @@ import com.cursomc.domain.Endereco;
 import com.cursomc.domain.enums.TipoCliente;
 import com.cursomc.dtos.ClienteDTO;
 import com.cursomc.dtos.ClienteNewDTO;
+import com.cursomc.dtos.ClienteResponseDTO;
 import com.cursomc.repositories.CidadeRepository;
 import com.cursomc.repositories.ClienteRepository;
 import com.cursomc.repositories.EnderecoRepository;
@@ -71,6 +72,10 @@ public class ClienteService {
         }
 
        return cli;
+    }
+
+    public ClienteResponseDTO fromResponseDTO(Cliente cliente){
+        return new ClienteResponseDTO(cliente);
     }
 
     @Transactional

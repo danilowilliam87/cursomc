@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import com.cursomc.domain.*;
 import com.cursomc.domain.enums.EstadoPagamento;
+import com.cursomc.dtos.ClienteResponseDTO;
 import com.cursomc.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -134,6 +135,8 @@ public class CursomcApplication implements CommandLineRunner{
 		p3.getItens().addAll(Arrays.asList(ip2));
 
 		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
+
+		System.out.println(new ClienteResponseDTO(cli1));
 		
 	}
 	

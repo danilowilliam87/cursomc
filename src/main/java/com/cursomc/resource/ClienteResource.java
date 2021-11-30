@@ -2,13 +2,16 @@ package com.cursomc.resource;
 
 
 import com.cursomc.domain.Cliente;
+import com.cursomc.domain.Endereco;
 import com.cursomc.dtos.ClienteDTO;
 import com.cursomc.dtos.ClienteNewDTO;
+import com.cursomc.dtos.ClienteResponseDTO;
 import com.cursomc.service.ClienteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.swing.text.html.parser.TagElement;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -25,9 +28,10 @@ public class ClienteResource {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
-	public ResponseEntity<?> findById(@PathVariable Integer id) throws Throwable {
-		Cliente obj = service.find(id);
-		return ResponseEntity.ok(obj);
+	public ResponseEntity<ClienteResponseDTO> findById(@PathVariable Integer id) throws Throwable {
+		Cliente cliente = service.find(id);
+		ClienteResponseDTO objResponse = new ClienteResponseDTO(service.find(id));
+		return ResponseEntity.ok(objResponse);
 	}
 
 	//@RequestMapping(method = RequestMethod.GET, value = "/{email}")

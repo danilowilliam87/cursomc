@@ -1,8 +1,9 @@
 package com.cursomc.service.validation;
 
+import com.cursomc.domain.Cliente;
 import com.cursomc.domain.enums.TipoCliente;
-import com.cursomc.dtos.ClienteDTO;
 import com.cursomc.dtos.ClienteNewDTO;
+import com.cursomc.repositories.ClienteRepository;
 import com.cursomc.resource.exception.FieldMessage;
 import com.cursomc.service.validation.util.BR;
 
@@ -12,7 +13,11 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert, ClienteNewDTO> {
 
+    private final ClienteRepository repo;
 
+    public ClienteInsertValidator(ClienteRepository repo) {
+        this.repo = repo;
+    }
 
 
     @Override
@@ -27,6 +32,11 @@ public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert
         if(clienteNewDTO.getTipo().equals(TipoCliente.PESSOAFISICA.getCod()) &&
         !BR.isValidSsn(clienteNewDTO.getCpfOuCnpj())){
             list.add(new FieldMessage("cpfOuCnpj", "CPF inválido"));
+        }
+
+       Cliente aux = repo.findByEmail(clienteNewDTO.getEmail());
+        if(aux != null){
+            list.add(new FieldMessage("email", "email já pertence a um cliente"));
         }
 
         if(clienteNewDTO.getTipo().equals(TipoCliente.PESSOAJURIDICA.getCod()) &&

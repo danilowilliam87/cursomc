@@ -4,6 +4,7 @@ package com.cursomc.dtos;
 import com.cursomc.service.validation.ClienteInsert;
 import org.hibernate.validator.constraints.Length;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
@@ -18,6 +19,7 @@ public class ClienteNewDTO implements Serializable {
 
     @NotEmpty(message = "preenchimento obrigatorio")
     @Email(message = "Email invalido")
+    @Column(unique = true)
     private String email;
 
     @NotEmpty(message = "preenchimento obrigatorio")
@@ -47,6 +49,9 @@ public class ClienteNewDTO implements Serializable {
     private String telefone2;
 
     private String telefone3;
+
+    public ClienteNewDTO(String nome, String email, String cpfOuCnpj, int cod) {
+    }
 
     public String getNome() {
         return nome;
