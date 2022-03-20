@@ -21,8 +21,10 @@ public class PedidoService {
         Optional<Pedido> obj = pedidoRepository.findById(id);
         return obj.orElseThrow(() ->
             new ObjectNotFoundException(
-                    "Objeto não encontrado!  Id : " + id + ", Tipo : " + Pedido.class.getName()
+                   "Objeto não encontrado!  Id : " + id + ", Tipo : " + Pedido.class.getName()
             ));
     }
+
+
 
 }
